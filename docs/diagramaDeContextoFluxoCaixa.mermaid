@@ -1,0 +1,34 @@
+graph TD
+
+%% Domínio Principal
+subgraph CF["CashFlow Management"]
+    CF_Transaction["Transaction"]
+    CF_CashFlowPeriod["CashFlowPeriod"]
+    CF_CategoryRef["Category (ref)"]
+    CF_Money["Money (Value Object)"]
+    CF_TransactionType["TransactionType (Enum)"]
+    CF_DateRange["DateRange (Value Object)"]
+end
+
+%% Subdomínio de Suporte
+subgraph CAT["Category Management"]
+    CAT_Category["Category"]
+end
+
+%% Subdomínio Genérico
+subgraph AUTH["Identity and Access"]
+    AUTH_AuthService["AuthService"]
+    AUTH_Role["Role"]
+    AUTH_JWT["JWT"]
+end
+
+%% Exportação e Integração
+subgraph EXPORT["Export and Integration"]
+    EXPORT_Service["ExportService"]
+    EXPORT_Webhooks["Webhooks (future)"]
+end
+
+%% Relacionamentos
+CF -->|Conformist| CAT
+CF -->|ACL| AUTH
+EXPORT -->|Partnership| CF

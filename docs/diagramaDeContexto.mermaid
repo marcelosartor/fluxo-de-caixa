@@ -1,0 +1,23 @@
+flowchart TD
+ subgraph subGraph0["Bounded Contexts"]
+        BC_AP["Contas a Pagar"]
+        BC_AR["Contas a Receber"]
+        BC_CAD["Cadastros"]
+        BC_AUTH["Autenticação/Autorização"]
+        BC_FC("Sistema de Fluxo de Caixa")
+  end
+    BC_AP -- U/D (Published Language) --> BC_FC
+    BC_AR -- U/D (Published Language) --> BC_FC
+    BC_CAD -- U/D (Published Language / Conformist) --> BC_FC
+    BC_FC -- U/D (Conformist) --> BC_AUTH
+
+     BC_AP:::Pine
+     BC_AR:::Pine
+     BC_CAD:::Pine
+     BC_AUTH:::Pine
+    classDef Pine stroke-width:1px, stroke-dasharray:none, stroke:#254336, fill:#27654A, color:#FFFFFF
+    style BC_CAD stroke-width:1px
+    style BC_AUTH stroke-width:1px
+    style BC_FC fill:#bbf,stroke:#333,stroke-width:2px
+
+

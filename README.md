@@ -96,3 +96,65 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+## Nest Fastify 
+Em substituição ao express por ser mais rapido
+```bash
+$ npm install @fastify/static
+$	npm install --save fastify-multer
+$	npm install multer
+$	npm install fastify-file-interceptor
+$ npm i --save @nestjs/platform-fastify
+
+## Nest Config
+Utilizado para isolar as configurações de ambiente (.env)
+```bash
+$ npm install @nestjs/config
+
+## Nest class-validator
+Utilizado para validalção de inputs
+```bash
+$ npm i --save class-validator class-transformer
+```
+## Nest Security
+```bash
+$ npm install --save @nestjs/jwt
+```
+
+## Nest BCrypt
+Utilizado para criptografia unidirecional
+```bash
+$ npm i bcrypt
+$ npm i -D @types/bcrypt
+```
+
+
+## Nest TypeOrm
+#### https://typeorm.io/
+Utilizado para conversao objeto relacional 
+
+```bash
+$ npm install --save typeorm @nestjs/typeorm mssql
+
+#### Migrações
+
+npm run migration:create --name=Mnnn_<nome-do-arquivo>
+npm run migration:run
+npm run migration:revert
+exemplo :
+npm run migration:create --name=M001_criar tabela inicial
+```
+
+## Nest Swagger 
+```bash
+npm install --save @nestjs/swagger
+```
+Endereço: 
+<dominio>/apidoc
+Exemplo: http://localhost:30004/apidoc
+
+
+## Date Time
+#### https://moment.github.io/luxon/#/
+```bash
+$ npm install --save luxon

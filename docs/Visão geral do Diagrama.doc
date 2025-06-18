@@ -1,0 +1,234 @@
+🧭 Visão Geral do Diagrama
+Esse Context Map modela uma aplicação de Fluxo de Caixa baseada em DDD, dividida em quatro contextos principais:
+
+🟦 CashFlow Management (Core Domain)
+Esse é o Domínio Principal, onde está o valor central do sistema: gerenciar o fluxo de caixa do usuário.
+
+Principais Elementos:
+CashFlowPeriod: representa um período (ex: mês) analisado.
+
+Transaction: entidade que representa uma entrada ou saída de dinheiro.
+
+TransactionType: enum que define se é INCOME ou EXPENSE.
+
+CategoryRef (VO): um objeto de valor que faz referência a uma categoria (de outro contexto).
+
+Money (VO): encapsula valor e moeda — separando lógica monetária.
+
+DateRange (VO): usado para gerar relatórios entre datas.
+
+CashFlowService: serviço de aplicação responsável por orquestrar regras de negócios, como criar transações, calcular saldo, etc.
+
+🟨 Category Management (Supporting Domain)
+Domínio de apoio que centraliza as categorias utilizadas pelas transações. Ele é separado para permitir autonomia e especialização.
+
+Elementos:
+Category: entidade com nome, descrição e tipo.
+
+CategoryType: enum que classifica categorias como FIXA, VARIÁVEL, etc.
+
+CategoryService: responsável por criar, editar e validar categorias.
+
+🧩 Relacionamento com o Core: o domínio CashFlow utiliza um CategoryRef como referência, e consome esse contexto via padrão Conformist — aceita o modelo do outro contexto como está.
+
+🟩 Identity & Access (Generic Domain)
+Um domínio genérico, usado por vários sistemas, responsável por autenticação e autorização.
+
+Elementos:
+User: entidade com dados de login.
+
+Role: enum que define permissões (USER, ADMIN).
+
+JWT: token de autenticação.
+
+AuthService: serviço que fornece login e controle de acesso.
+
+🔐 Integração com o Core: feita via ACL (Anti-Corruption Layer) — o domínio de fluxo de caixa não depende diretamente do modelo de Auth, mas cria um adaptador/translator para proteger suas regras.
+
+🟧 Export & Integration (Supporting)
+Um contexto de suporte voltado à exportação de dados e integração com outros sistemas.
+
+Elementos:
+ExportService: gera relatórios ou arquivos para exportação.
+
+Webhook: emite eventos (ex: saldo negativo) para integração.
+
+ReportGenerator: gera relatórios e dashboards.
+
+🤝 Relacionamento com o Core: esse contexto é parceiro do Core e se comunica com ele com contrato explícito (Partnership) — permitindo desacoplamento, mas com alinhamento colaborativo.
+
+📐 Por que essa separação?
+Permite escalabilidade modular: cada contexto pode evoluir sozinho.
+
+Reduz o acoplamento entre funcionalidades.
+
+Facilita testes, reuso e organização do código.
+
+Reflete a realidade do domínio com limites bem definidos.
+
+🧠 Como usar na palestra
+Mostre primeiro o Core Domain: foco nas regras mais críticas.
+
+Depois apresente os domínios auxiliares e como eles se conectam.
+
+Enfatize os tipos de integração: Conformist, ACL, Parceria.
+
+Explique que DDD ajuda a alinhar design com o negócio real.
+
+-----
+
+🟦 Gestão de Fluxo de Caixa (Domínio Principal)
+📆 Período de Fluxo (CashFlowPeriod)
+Como usuário,
+quero definir um período de análise do meu fluxo de caixa,
+para visualizar entradas e saídas dentro de um intervalo específico (ex: mensal).
+
+💸 Transação
+Como usuário,
+quero registrar uma transação de entrada ou saída,
+para acompanhar meu saldo e entender para onde meu dinheiro está indo.
+
+🔀 TipoTransação (Enum)
+Como desenvolvedor do domínio,
+quero diferenciar tipos de transação como RECEITA ou DESPESA,
+para aplicar regras diferentes e gerar relatórios corretos.
+
+🏷️ CategoriaRef (VO)
+Como usuário,
+quero atribuir uma categoria existente à transação,
+para organizar melhor meus gastos e receitas.
+
+💰 Dinheiro (VO)
+Como sistema,
+quero tratar valores monetários com segurança (ex: arredondamento, moeda, formato),
+para garantir cálculos e exibições consistentes.
+
+🗓️ IntervaloDatas (VO)
+Como usuário,
+quero gerar relatórios com base em intervalos de datas customizáveis,
+para analisar períodos específicos, como semanas ou trimestres.
+
+🛠️ ServiçoFluxoCaixa (App Service)
+Como aplicação,
+quero orquestrar a criação e cálculo de transações com base em regras de negócio,
+para garantir integridade e consistência do fluxo de caixa.
+
+🟨 Gestão de Categorias (Domínio de Apoio)
+🏷️ Categoria
+Como usuário administrador,
+quero criar e editar categorias financeiras,
+para que os usuários possam organizar suas transações com base nelas.
+
+📂 TipoCategoria (Enum)
+Como usuário,
+quero saber se uma categoria é FIXA ou VARIÁVEL,
+para ter mais controle sobre previsibilidade dos gastos.
+
+🛠️ ServiçoCategoria
+Como aplicação,
+quero validar nomes únicos e tipos ao criar categorias,
+para evitar inconsistências e duplicidades.
+
+🟩 Identidade & Acesso (Domínio Genérico)
+👤 Usuário
+Como novo usuário,
+quero criar minha conta e meus dados de login,
+para acessar o sistema com segurança.
+
+🔐 Regra (Enum)
+Como administrador,
+quero atribuir papéis como USUÁRIO ou ADMIN,
+para controlar permissões e acesso a funcionalidades.
+
+🪪 Token JWT
+Como sistema,
+quero gerar um token JWT após login válido,
+para permitir autenticação segura em cada requisição.
+
+🛠️ ServiçoAutenticação
+Como usuário,
+quero logar no sistema com e-mail e senha,
+para ter acesso às minhas informações financeiras com segurança.
+
+🟧 Exportação & Integração (Domínio de Apoio)
+📤 ServiçoExportação
+Como usuário,
+quero gerar relatórios exportáveis (PDF, CSV),
+para compartilhar ou arquivar minhas análises financeiras.
+
+🔔 Webhook
+Como sistema externo,
+quero ser notificado quando houver eventos relevantes (ex: saldo negativo),
+para executar ações automatizadas como alertas ou bloqueios.
+
+📊 GeradorRelatórios
+Como usuário,
+quero visualizar relatórios gráficos e tabelas com filtros de data e categoria,
+para tomar decisões financeiras com base em dados claros.
+
+Essas histórias são o ponto de partida para aprofundar regras (Invariantes, Regras de Negócio, Políticas), e são ótimas para validar entendimento com stakeholders.
+
+Se quiser, posso expandir isso para incluir os eventos do domínio e as invariantes de cada entidade ou criar uma planilha ou quadro Kanban com essas histórias.
+
+-------
+
+# Representação grafica com mermaid
+flowchart TD
+  %% Core Domain
+  subgraph CF["🟦 Gestão de Fluxo de Caixa (Domínio Principal)"]
+    CF_Periodo["📆 Período de Fluxo (CashFlowPeriod)"]
+    CF_Transacao["💸 Transação"]
+    CF_TipoTransacao["🔀 TipoTransação (Enum)"]
+    CF_CategoriaVO["🏷️ CategoriaRef (VO)"]
+    CF_Dinheiro["💰 Dinheiro (VO)"]
+    CF_IntervaloDatas["🗓️ IntervaloDatas (VO)"]
+    CF_Servico["🛠️ ServiçoFluxoCaixa"]
+  end
+
+  %% Supporting Domain - Categorias
+  subgraph CAT["🟨 Gestão de Categorias (Domínio de Apoio)"]
+    CAT_Categoria["🏷️ Categoria"]
+    CAT_TipoCategoria["📂 TipoCategoria (Enum)"]
+    CAT_Servico["🛠️ ServiçoCategoria"]
+  end
+
+  %% Generic Domain - Auth
+  subgraph AUTH["🟩 Identidade & Acesso (Domínio Genérico)"]
+    AUTH_Usuario["👤 Usuário"]
+    AUTH_Regra["🔐 Regra (Enum)"]
+    AUTH_JWT["🪪 Token JWT"]
+    AUTH_Servico["🛠️ ServiçoAutenticação"]
+  end
+
+  %% Supporting Domain - Exportação
+  subgraph EXP["🟧 Exportação & Integração (Domínio de Apoio)"]
+    EXP_ServicoExport["📤 ServiçoExportação"]
+    EXP_Webhook["🔔 Webhook"]
+    EXP_Relatorio["📊 GeradorRelatórios"]
+  end
+
+  %% Relacionamentos entre Contextos
+  CF -->|🎯 Conformista| CAT
+  CF -->|🧱 ACL (Camada Anticorrupção)| AUTH
+  EXP -->|🤝 Parceria| CF
+
+  %% Dependências internas CF
+  CF_Periodo --> CF_Transacao
+  CF_Transacao --> CF_Dinheiro
+  CF_Transacao --> CF_CategoriaVO
+  CF_Transacao --> CF_TipoTransacao
+  CF_Servico --> CF_Periodo
+  CF_Servico --> CF_IntervaloDatas
+
+  %% Internas CAT
+  CAT_Servico --> CAT_Categoria
+  CAT_Categoria --> CAT_TipoCategoria
+
+  %% Internas AUTH
+  AUTH_Servico --> AUTH_Usuario
+  AUTH_Usuario --> AUTH_Regra
+  AUTH_Usuario --> AUTH_JWT
+
+  %% Internas EXP
+  EXP_ServicoExport --> EXP_Relatorio
+  EXP_Webhook --> CF_Periodo

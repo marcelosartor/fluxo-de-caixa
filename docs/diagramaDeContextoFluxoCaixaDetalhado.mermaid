@@ -1,0 +1,59 @@
+flowchart TD
+  %% Core Domain
+  subgraph CF["🟦 Gestão de Fluxo de Caixa (Domínio Principal)"]
+    CF_Periodo["📆 Período de Fluxo (CashFlowPeriod)"]
+    CF_Transacao["💸 Transação"]
+    CF_TipoTransacao["🔀 TipoTransação (Enum)"]
+    CF_CategoriaVO["🏷️ CategoriaRef (VO)"]
+    CF_Dinheiro["💰 Dinheiro (VO)"]
+    CF_IntervaloDatas["🗓️ IntervaloDatas (VO)"]
+    CF_Servico["🛠️ ServiçoFluxoCaixa"]
+  end
+
+  %% Supporting Domain - Categorias
+  subgraph CAT["🟨 Gestão de Categorias (Domínio de Apoio)"]
+    CAT_Categoria["🏷️ Categoria"]
+    CAT_TipoCategoria["📂 TipoCategoria (Enum)"]
+    CAT_Servico["🛠️ ServiçoCategoria"]
+  end
+
+  %% Generic Domain - Auth
+  subgraph AUTH["🟩 Identidade & Acesso (Domínio Genérico)"]
+    AUTH_Usuario["👤 Usuário"]
+    AUTH_Regra["🔐 Regra (Enum)"]
+    AUTH_JWT["🪪 Token JWT"]
+    AUTH_Servico["🛠️ ServiçoAutenticação"]
+  end
+
+  %% Supporting Domain - Exportação
+  subgraph EXP["🟧 Exportação & Integração (Domínio de Apoio)"]
+    EXP_ServicoExport["📤 ServiçoExportação"]
+    EXP_Webhook["🔔 Webhook"]
+    EXP_Relatorio["📊 GeradorRelatórios"]
+  end
+
+  %% Relacionamentos entre Contextos
+  CF -->|🎯 Conformista| CAT
+  CF -->|🧱 ACL - Camada Anticorrupção | AUTH
+  EXP -->|🤝 Parceria| CF
+
+  %% Dependências internas CF
+  CF_Periodo --> CF_Transacao
+  CF_Transacao --> CF_Dinheiro
+  CF_Transacao --> CF_CategoriaVO
+  CF_Transacao --> CF_TipoTransacao
+  CF_Servico --> CF_Periodo
+  CF_Servico --> CF_IntervaloDatas
+
+  %% Internas CAT
+  CAT_Servico --> CAT_Categoria
+  CAT_Categoria --> CAT_TipoCategoria
+
+  %% Internas AUTH
+  AUTH_Servico --> AUTH_Usuario
+  AUTH_Usuario --> AUTH_Regra
+  AUTH_Usuario --> AUTH_JWT
+
+  %% Internas EXP
+  EXP_ServicoExport --> EXP_Relatorio
+  EXP_Webhook --> CF_Periodo

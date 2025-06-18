@@ -1,0 +1,3 @@
+export enum AuthClient {
+  VUE_APP = 'VlVFX0FQUDo1OTYxMDVkZS0yOWJhLTQzZWYtYmJjNC1lYWEyOTEwMTRhNzM=',
+}
