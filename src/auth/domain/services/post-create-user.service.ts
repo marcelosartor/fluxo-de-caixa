@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common"
 import { User } from "../entities/user.entity"
 import { UserExistsException } from "src/core/exception-handler/domain/exceptions/user-exists.exception"
-import { StatusUser } from "../enums/statusUser.enum"
 import { UserRepository } from "src/auth/infra/repositories/user.repository"
 
 @Injectable()
@@ -17,7 +16,7 @@ export class PostCreateUserService {
         throw new UserExistsException(`O e-mail: ${user.email} já esta cadastrado!`)
       }
                   
-      user.senha = '123456'
+      user.password = '123456'
       return await this.userRepository.create(user)
     } catch (error) {
       throw error

@@ -12,12 +12,7 @@ export class PostCreateUserController {
     private readonly postCreateUserService: PostCreateUserService,
     private readonly userMapper: UserMapper,
   ) {}
-
-  @ApiHeader({
-    name: 'Authorization',
-    description: 'Usuario e senha do client em basic authorization',
-    example: 'Basic *****',
-  })
+  
   @ApiResponse({
     status: HttpStatus.UNAUTHORIZED,
     description: 'Acesso não autorizado',
@@ -27,13 +22,12 @@ export class PostCreateUserController {
     description: 'Problemas com os dados enviados no payload ou sua estrutura',
   })
   @ApiOperation({ summary: 'Cria um novo usuario.' })
-  //@UseGuards(BasicGuard)
   @Post('/user')
   async createUser(@Body() userDto: InputUserDto): Promise<OutputUserDto> {
-     return this.userMapper.assembler(
-        await this.postCreateUserService.createUser(
-            this.userMapper.disassembler<InputUserDto>(userDto)
-        )
-      )
+    const _user =  await this.postCreateUserService.createUser(
+      this.userMapper.disassembler<InputUserDto>(userDto))
+   
+    return this.userMapper.assembler(_user)
+     
   }
 }

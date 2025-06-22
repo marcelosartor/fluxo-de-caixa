@@ -1,6 +1,4 @@
 import { BeforeInsert, Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, VirtualColumn } from 'typeorm'
-import { StatusUser } from '../enums/statusUser.enum'
-import { YesOrNo } from 'src/core/communs/domain/enums/yes-or-no.enum'
 import { DateTime } from 'luxon'
 
 @Entity('APP_USER')
@@ -9,20 +7,20 @@ export class User {
   id: number
 
   @Column()
-  nome: string
+  name: string
 
   @Column()
-  senha: string
+  password: string
   
   @Column()
   email: string
 
   @Column({ name: 'created_at', type: 'datetime' })
-  criadoEm: Date
+  createAt: Date
 
   @BeforeInsert()
   beforeInsert() {
     const _date = DateTime.now().toUTC().toJSDate()
-    this.criadoEm = _date
+    this.createAt = _date
   }
 }

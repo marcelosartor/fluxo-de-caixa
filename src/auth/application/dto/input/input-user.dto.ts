@@ -6,7 +6,7 @@ export class InputUserDto {
   @ApiProperty({ description: 'Nome do usuario', example: 'José da Silva Sauro' })
   @IsString()
   @IsNotEmpty()
-  public nome: string
+  public name: string
 
   @ApiProperty({
     description: 'Email do usuario. Utilizado como chave de login',

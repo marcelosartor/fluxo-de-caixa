@@ -13,7 +13,7 @@ import { ExceptionHandlerModule } from './core/exception-handler/exception-handl
     TypeOrmModule.forRoot({
       type: 'better-sqlite3',
       database: './database.sqlite',
-      dropSchema: true,
+      dropSchema: false,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
       logging: true,

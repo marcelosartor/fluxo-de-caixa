@@ -46,8 +46,6 @@ async function bootstrap() {
     credentials: true,
   })
 
-
-  //const app = await NestFactory.create(AppModule);
   await app.listen(process.env.PORT ?? 3000);
   console.log(`Application is running on: ${configService.getAppPort() ?? 3000}`)
 }

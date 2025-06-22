@@ -7,6 +7,11 @@ import { PostCreateUserController } from './application/controllers/post-create-
 import { UserMapper } from './application/mappers/user.mapper'
 import { UserRepository } from './infra/repositories/user.repository'
 import { PostCreateUserService } from './domain/services/post-create-user.service'
+import { PostTokenAuthController } from './application/controllers/post-token-auth.controller'
+import { CredentialMapper } from './application/mappers/credential.mapper'
+import { PostTokenAuthService } from './domain/services/post-token-auth.service'
+import { PostCheckTokenAuthController } from './application/controllers/post-check-token-auth.controller'
+import { PostCheckTokenAuthService } from './domain/services/post-check-token-auth.service'
 
 @Module({
   imports: [
@@ -15,16 +20,18 @@ import { PostCreateUserService } from './domain/services/post-create-user.servic
       useFactory: async (configService: EnvConfigService) => ({
         global: true,
         secret: configService.getJwtSecret(),
-        //singOptions: { expiresIn: `${configService.getJwtExpiresInSeconds()}s` },
+        singOptions: { expiresIn: `${configService.getJwtExpiresInSeconds()}s` },
       }),
       inject: [EnvConfigService],
     }),
   ],
   controllers: [
     PostCreateUserController,
+    PostTokenAuthController,
+    PostCheckTokenAuthController,
   ],
   providers: [
-    UserMapper,UserRepository,PostCreateUserService
+    UserMapper,CredentialMapper,UserRepository,PostCreateUserService,PostTokenAuthService,PostCheckTokenAuthService
   ],
 })
 export class AuthModule {}
